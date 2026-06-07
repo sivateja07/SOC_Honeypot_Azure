@@ -1,0 +1,23 @@
+// Retrieve all failed logon events
+SecurityEvent
+| where EventID == 4625
+
+// Failed logon event details
+SecurityEvent
+| where EventID == 4625
+| project TimeGenerated, Account, Computer, EventID, Activity, IpAddress
+
+// Top attacker IPs
+SecurityEvent
+| where EventID == 4625
+| summarize Attempts=count() by IpAddress
+| order by Attempts desc
+
+// Attacker IPs and usernames
+SecurityEvent
+| where EventID == 4625
+| summarize Attempts=count() by IpAddress, Account
+| order by Attempts desc
+
+// Verify GeoIP Watchlist
+_GetWatchlist('geoip')
